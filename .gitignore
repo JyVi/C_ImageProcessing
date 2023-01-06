@@ -1,3 +1,8 @@
+# Swap files
+.vscode/*
+*.swp
+.\#*
+
 # Prerequisites
 *.d
 

@@ -1,21 +1,30 @@
+# Makefile 
+
 CC = gcc
-CFLAGS = -I./include -L./lib -lm -lSDL2
-SOURCES = $(wildcard src/*.c)
-OBJECTS = $(SOURCES:.c=.o)
-EXECUTABLE = main
+CFLAGS = -Wall -Wextra $(shell pkg-config --cflags sdl2 SDL2_image gtk+-3.0)
+LDLIBS := -lm $(shell pkg-config --libs sdl2 SDL2_image gtk+-3.0)
+SRC = $(wildcard ColorFilters/*.c DetectionFilters/*.c \
+        BlurringFilters/*.c MathsFilters/*.c main.c test.c)
+OBJ = $(SRC:.c=.o)
+DEP = $(SRC:.c=.d)
 
+all: main test
 
-all: $(EXECUTABLE)
+#here $@ mean the target and $^ mean the dependencies
 
-$(EXECUTABLE): $(OBJECTS)
-    $(CC) $(OBJECTS) -o $@ $(CFLAGS)
+main: main.o ${OBJ}
+    ${CC} ${CFLAGS} ${LDLIBS} -o $@ $^ 
 
-%.o: %.c
-    $(CC) -c $< -o $@ $(CFLAGS)
+test: test.o ${OBJ}
+    ${CC} ${CFLAGS} ${LDLIBS} -o $@ $^ 
 
-test: $(EXECUTABLE)
-    ./$(EXECUTABLE)
+.PHONY: all clean
 
 clean:
-	rm -f $(EXECUTABLE) $(OBJECTS)
+    ${RM} ${OBJ}
+    ${RM} ${DEP}
+    ${RM} main
 
+-include ${DEP}
+
+# END

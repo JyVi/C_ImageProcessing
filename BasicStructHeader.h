@@ -5,6 +5,9 @@ struct Image
 {
     SDL_Surface* surface;
     SDL_PixelFormat* format;
+    size_t width = surface->w;
+    size_t height = surface->h;
+    size_t size = width * height;
     Uint32* Pixels;
     Uint8* GreyPixels;
 }typedef Image;
