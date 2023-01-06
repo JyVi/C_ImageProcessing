@@ -1,0 +1,12 @@
+#include <err.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include "BasicStructHeader.h"
+#include "./BlurringFilters/BlurringFiltersHeader.h"
+#include "./ColorFilters/ColorFiltersHeader.h"
+#include "./DetectionFilters/DetectionFiltersHeader.h"
+#include "./MathsFilters/MathsFiltersHeader.h"
