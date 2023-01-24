@@ -73,6 +73,7 @@ void FFT1D(double* real, double* imag, size_t size)
     free(bit_reversed);
 }
 
+// 2D FFT
 void FFT2D(double* real, double* imag, size_t width, size_t height)
 {
     // Perform the 1d FFT on each row
@@ -88,6 +89,7 @@ void FFT2D(double* real, double* imag, size_t width, size_t height)
     // swap those values once only
     for (size_t i = 0; i < height; i++)
     {
+        // here once because j = i
         for (size_t j = i; j < width; j++)
         {
             double temp_real = real[i * width + j];
@@ -105,6 +107,45 @@ void FFT2D(double* real, double* imag, size_t width, size_t height)
 
 }
 
+// inverse 2D FFT
+void IFFT2D(double* real, double* imag, size_t width, size_t height)
+{
+    // So the inverse FFT is the same as the FFT but with the imaginary part of the twiddle factor
+    // being multiplied by -1
+    // twadle factor = cos(2 * M_PI * k / (2 * s)) - sin(2 * M_PI * k / (2 * s)) * i
 
-void IFFT2D()
-{}
+    // for loop of 2 because we want to perform the FFT twice
+    // once on the rows and once on the columns
+    // and we need to transpose the matrix after the first FFT
+    for (short k = 0; k < 2; k++)
+    {
+        // first lets transpose the 2D array
+        for (size_t i = 0; i < height; i++)
+        {
+            // here once because j = i
+            for (size_t j = i; j< width; j++)
+            {
+                double temp_real = real[i * width + j];
+                double temp_imag = imag[i * width + j];
+
+                real[i * width + j] = real[j * width + i];
+                imag[i * width + j] = imag[j * width + i];
+
+                real[j * width + i] = temp_real;
+                imag[j * width + i] = temp_imag;
+            }
+        }
+
+        // now we will perferm the 1DFFT to each row of the transposed matrix
+        for (size_t i = 0; i < height; i++)
+        {
+            for (size_t j = 0; j < width; j++)
+            {
+                // pointer notation same as real[i * widthj] and imag[i * width]
+                FFT1D(real + i * width, imag + i * width, width);
+            }
+        }
+    }
+
+
+}

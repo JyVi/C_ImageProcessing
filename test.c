@@ -51,11 +51,11 @@ int main(int argc, char** argv[])
             }
         }
     }
+    // Image type contain color and greyscale image 
+    // but in the form of Uint32 and Uint 32 respectively 
     Image* image = NewImage();
     image = ToImage(surface);
 
-    // Blurring Filters
-    Image* BlurredImage = NewImage();
      
 
     FreeImage(image);

@@ -3,3 +3,4 @@
 #include "../BasicStructHeader.h"
 
 Uint8 Greyscale(SDL_Surface* surface);
+
