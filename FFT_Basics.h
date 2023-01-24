@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include "./BasicStructures.h"
+#include "./BasicStructHeader.h"
 #include <math.h>
 
 void FFT1D(double* real, double* imag, size_t size)

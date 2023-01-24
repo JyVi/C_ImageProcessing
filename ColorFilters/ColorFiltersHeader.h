@@ -2,4 +2,4 @@
 #include <SDL2/SDL_image.h>
 #include "../BasicStructHeader.h"
 
-Image Greyscale(Image image);
+Uint8 Greyscale(SDL_Surface* surface);
