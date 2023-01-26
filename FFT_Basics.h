@@ -8,6 +8,7 @@ void FFT1D(double* real, double* imag, size_t size)
     // bit reverse the 2 input arrays which are of same size
     // reverse in first the order table
     int* bit_reversed = (int*)malloc(sizeof(int) * size);
+
     for (size_t i = 0; i < size; i++)
     {
         bit_reversed[i] =(bit_reversed[i >> 1] >> 1) | ((i & 1) << (int)(log2(size) - 1));
@@ -55,17 +56,28 @@ void FFT1D(double* real, double* imag, size_t size)
     */
     for (size_t s = 1; s < size; s *= 2)
     {
-        double w_real = cos(M_PI / s);
-        double w_imag = -sin(M_PI / s);
+        // which explain why i have 2 temp variables
+        // double tw_real = cos(M_PI / s);
+        // double tw_imag = -sin(M_PI / s);
         for (size_t k = 0; k < s; k++)
         {
-            double w_real_temp = cos(2 * M_PI * k / (2 * s));
-            double w_imag_temp = -sin(2 * M_PI * k / (2 * s));
+            // this is the twiddle factor
+            // here i split the real and imaginary part of the numbers
+            // dos the 2 multplied by M_PI cancel each other ? no why ? 
+            double tw_real_temp = cos(2 * M_PI * k / (2 * s));
+            double tw_imag_temp = -sin(2 * M_PI * k / (2 * s));
             for (size_t j = 0; j < size; j += 2*s)
             {
                 size_t idex = j+k;
-                double temp_real = real[idex + s] * w_real_temp - imag[idex + s] * w_imag_temp;
-                double temp_image = real[idex + s] * w_imag_temp + imag[idex + s] * w_real_temp;
+                double temp_real = real[idex + s] * tw_real_temp - imag[idex + s] * tw_imag_temp;
+                double temp_image = real[idex + s] * tw_imag_temp + imag[idex + s] * tw_real_temp;
+
+                double temp_real2 = real[idex];
+                double temp_imag2 = imag[idex];
+                real[idex] = temp_real2 + temp_real;
+                imag[idex] = temp_imag2 + temp_image;
+                real[idex + s] = temp_real2 - temp_real;
+                imag[idex + s] = temp_imag2 - temp_image;
             }
         }
     }
@@ -89,7 +101,7 @@ void FFT2D(double* real, double* imag, size_t width, size_t height)
     // swap those values once only
     for (size_t i = 0; i < height; i++)
     {
-        // here once because j = i
+        // here once because j = i + 1 we swap only the half of the matrix
         for (size_t j = i; j < width; j++)
         {
             double temp_real = real[i * width + j];
@@ -102,9 +114,6 @@ void FFT2D(double* real, double* imag, size_t width, size_t height)
             imag[j * width + i] = temp_imag;
         }
     }
-
-    
-
 }
 
 // inverse 2D FFT
@@ -122,8 +131,8 @@ void IFFT2D(double* real, double* imag, size_t width, size_t height)
         // first lets transpose the 2D array
         for (size_t i = 0; i < height; i++)
         {
-            // here once because j = i
-            for (size_t j = i; j< width; j++)
+            // here once because j = i + 1 we swap only the half of the matrix 
+            for (size_t j = i + 1; j < width; j++)
             {
                 double temp_real = real[i * width + j];
                 double temp_imag = imag[i * width + j];
@@ -139,13 +148,16 @@ void IFFT2D(double* real, double* imag, size_t width, size_t height)
         // now we will perferm the 1DFFT to each row of the transposed matrix
         for (size_t i = 0; i < height; i++)
         {
-            for (size_t j = 0; j < width; j++)
-            {
-                // pointer notation same as real[i * widthj] and imag[i * width]
-                FFT1D(real + i * width, imag + i * width, width);
-            }
+            // pointer notation same as real[i * widthj] and imag[i * width]
+            FFT1D(real + i * width, imag + i * width, width);
         }
     }
 
-
+    // normalising the arrays
+    size_t size = width * height;
+    for (size_t i = 0; i < size; i++)
+    {
+        real[i] /= size;
+        imag[i] /= size;
+    }
 }
