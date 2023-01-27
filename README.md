@@ -1,8 +1,11 @@
 # C_ImageProcessing
 I am trying to reproduce some of the basic filter to pre-process images for data eextraction
 
+# Todo 
+-test if the image is a power of 2 and zero pad it or resize it with ReSizeImage function. (need to find the spot of when the size is not as close to a power of 2 than a reisize) Test suite is here for that.
 
-good documentation :
+
+# good documentation :
 (excelent one)
 http://www.cs.cmu.edu/~16385/s15/lectures/Lecture3.pdf
 
