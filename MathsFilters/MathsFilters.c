@@ -3,6 +3,31 @@
 #include <stdlib.h>
 #include "../BasicStructHeader.h"
 
+
+size_t GetPowerOfTwo(size_t size)
+{
+    size_t next = 1;
+    while (next < size)
+        next = newt << 1; // faster than next *= 2;
+    return next;
+}
+
+/* 
+ * Zero padding of an array
+ * 
+ * @param array: array
+ * @param size: size of the array
+ */
+void ZeroPadd(void* array, size_t size, size_t newSize)
+{
+    void* newArray = calloc(newSize, sizeof(array[0]));
+    for (size_t i = 0; i < size; i++)
+        newArray[i] = array[i];
+    free(array);
+    array = newArray;
+}
+
+
 void ReScale(Image image, double factor, size_t newWidth, size_t newHeight)
 {
     size_t oldWidth = image.width;
