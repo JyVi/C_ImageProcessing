@@ -27,7 +27,12 @@ void ZeroPadd(void* array, size_t size, size_t newSize)
     array = newArray;
 }
 
-
+/* 
+*  @brief Resize an image with bicubic interpolation
+*  @param factor: factor of the resize
+*  @param newWidth: new width of the image
+*  @param newHeight: new height of the image
+*/
 void ReScale(Image image, double factor, size_t newWidth, size_t newHeight)
 {
     size_t oldWidth = image.width;
